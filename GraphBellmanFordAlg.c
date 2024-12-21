@@ -66,7 +66,37 @@ GraphBellmanFordAlg* GraphBellmanFordAlgExecute(Graph* g,
   
   // THE ALGORTIHM TO BUILD THE SHORTEST-PATHS TREE
 
-  return NULL;
+  // Inicialização
+  result->marked = (unsigned int*)calloc(numVertices, sizeof(unsigned int));
+  result->distance = (int*)malloc(numVertices * sizeof(int));
+  result->predecessor = (int*)malloc(numVertices * sizeof(int));
+  for (unsigned int i = 0; i < numVertices; i++) {
+    result->distance[i] = -1;  // Inicialmente, nenhuma distância é conhecida
+    result->predecessor[i] = -1;  // Nenhum predecessor definido
+  }
+  result->distance[startVertex] = 0;  // Distância ao próprio vértice é zero
+
+  // Algoritmo de Bellman-Ford para grafos não ponderados
+  for (unsigned int pass = 0; pass < numVertices - 1; pass++) {
+    for (unsigned int u = 0; u < numVertices; u++) {
+      if (result->distance[u] != -1) {  // Se o vértice foi alcançado
+        unsigned int* neighbors = GraphGetAdjacentsTo(g, u);
+        unsigned int numNeighbors = neighbors[0];
+        for (unsigned int i = 1; i <= numNeighbors; i++) {
+          unsigned int v = neighbors[i];
+          if (result->distance[v] == -1 ||
+              result->distance[v] > result->distance[u] + 1) {
+            result->distance[v] = result->distance[u] + 1;
+            result->predecessor[v] = u;
+            result->marked[v] = 1;
+          }
+        }
+        free(neighbors);
+      }
+    }
+  }
+
+  return result;
 }
 
 void GraphBellmanFordAlgDestroy(GraphBellmanFordAlg** p) {
