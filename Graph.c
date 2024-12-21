@@ -6,10 +6,10 @@
 // Graph - Using a list of adjacency lists representation
 //
 
-// Student Name :
-// Student Number :
-// Student Name :
-// Student Number :
+// Student Name : Tiago Mendes
+// Student Number : 119378
+// Student Name : André Vasconcelos
+// Student Number : 118827
 
 /*** COMPLETE THE GraphCreateTranspose FUNCTION ***/
 
@@ -137,9 +137,40 @@ Graph* GraphCreateTranspose(const Graph* g) {
   assert(g->isDigraph);
   assert(g->isComplete == 0);
 
-  // COMPLETE THE CODE
+  // Criar um novo grafo com mesmo número de vértices, digrafo = 1, 
+  // e com peso se o original for pesado.
+  Graph* transposed =
+      GraphCreate(g->numVertices, g->isDigraph, g->isWeighted);
 
-  return NULL;
+  // Percorrer cada vértice do grafo original
+  List* vertices = g->verticesList;
+  ListMoveToHead(vertices);
+  for (unsigned int i = 0; i < g->numVertices; i++) {
+    struct _Vertex* vOrig = ListGetCurrentItem(vertices);
+
+    // Para cada aresta (vOrig->id, w) no grafo original,
+    // queremos inserir a aresta (w, vOrig->id) no grafo transposto.
+    List* edges = vOrig->edgesList;
+    if (!ListIsEmpty(edges)) {
+      ListMoveToHead(edges);
+      for (int j = 0; j < ListGetSize(edges); j++) {
+        struct _Edge* eOrig = ListGetCurrentItem(edges);
+
+        // Se for grafo pesado, chamamos GraphAddWeightedEdge
+        // senão, chamamos GraphAddEdge.
+        if (g->isWeighted) {
+          GraphAddWeightedEdge(transposed, eOrig->adjVertex, vOrig->id,
+                               eOrig->weight);
+        } else {
+          GraphAddEdge(transposed, eOrig->adjVertex, vOrig->id);
+        }
+        ListMoveToNext(edges);
+      }
+    }
+    ListMoveToNext(vertices);
+  }
+
+  return transposed;
 }
 
 void GraphDestroy(Graph** p) {
