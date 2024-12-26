@@ -51,7 +51,63 @@ GraphEccentricityMeasures* GraphEccentricityMeasuresCompute(Graph* g) {
   // Allocate the central vertices array : number of central vertices + 1
   // Fill in the central vertices array
 
-  return NULL;
+  // Obter o número de vértices
+  unsigned int numVertices = GraphGetNumVertices(g);
+
+  // Alocar memória para a estrutura principal
+  GraphEccentricityMeasures* measures = (GraphEccentricityMeasures*)malloc(sizeof(GraphEccentricityMeasures));
+  measures->eccentricity = (int*)malloc(numVertices * sizeof(int));
+  measures->graph = g;
+
+  // Obter as distâncias mais curtas entre todos os pares
+  GraphAllPairsShortestDistances* distances = GraphAllPairsShortestDistancesCompute(g);
+  const int* const* distMatrix = GraphAllPairsShortestDistancesGetDistances(distances);
+
+  // Inicializar valores de raio e diâmetro
+  measures->graphRadius = -1;
+  measures->graphDiameter = -1;
+
+  // Calcular excentricidade para cada vértice
+  for (unsigned int v = 0; v < numVertices; v++) {
+    int maxDist = -1;
+    for (unsigned int u = 0; u < numVertices; u++) {
+      if (distMatrix[v][u] != -1 && distMatrix[v][u] > maxDist) {
+        maxDist = distMatrix[v][u];
+      }
+    }
+    measures->eccentricity[v] = maxDist;
+
+    // Atualizar raio e diâmetro
+    if (measures->graphRadius == -1 || maxDist < measures->graphRadius) {
+      measures->graphRadius = maxDist;
+    }
+    if (maxDist > measures->graphDiameter) {
+      measures->graphDiameter = maxDist;
+    }
+  }
+
+  // Identificar os vértices centrais
+  unsigned int centralCount = 0;
+  for (unsigned int v = 0; v < numVertices; v++) {
+    if (measures->eccentricity[v] == measures->graphRadius) {
+      centralCount++;
+    }
+  }
+
+  measures->centralVertices = (unsigned int*)malloc((centralCount + 1) * sizeof(unsigned int));
+  measures->centralVertices[0] = centralCount;
+
+  unsigned int index = 1;
+  for (unsigned int v = 0; v < numVertices; v++) {
+    if (measures->eccentricity[v] == measures->graphRadius) {
+      measures->centralVertices[index++] = v;
+    }
+  }
+
+  // Liberar memória da matriz de distâncias
+  GraphAllPairsShortestDistancesDestroy(&distances);
+
+  return measures;
 }
 
 void GraphEccentricityMeasuresDestroy(GraphEccentricityMeasures** p) {
@@ -95,14 +151,31 @@ unsigned int* GraphGetCentralVertices(const GraphEccentricityMeasures* p) {
   assert(p != NULL);
   assert(p->centralVertices != NULL);
 
-  // COMPLETE THE CODE
+  unsigned int size = p->centralVertices[0] + 1;
+  unsigned int* copy = (unsigned int*)malloc(size * sizeof(unsigned int));
+  for (unsigned int i = 0; i < size; i++) {
+    copy[i] = p->centralVertices[i];
+  }
 
-  return NULL;
+  return copy;
 }
 
 // Print the graph radius and diameter
 // Print the vertex eccentricity values
 // Print the set of central vertices
 void GraphEccentricityMeasuresPrint(const GraphEccentricityMeasures* p) {
-  // COMPLETE THE CODE
+  printf("Graph Radius: %d\n", p->graphRadius);
+  printf("Graph Diameter: %d\n", p->graphDiameter);
+
+  printf("Vertex Eccentricities:\n");
+  unsigned int numVertices = GraphGetNumVertices(p->graph);
+  for (unsigned int v = 0; v < numVertices; v++) {
+    printf("Vertex %u: %d\n", v, p->eccentricity[v]);
+  }
+
+  printf("Central Vertices:\n");
+  for (unsigned int i = 1; i <= p->centralVertices[0]; i++) {
+    printf("%u ", p->centralVertices[i]);
+  }
+  printf("\n");
 }
