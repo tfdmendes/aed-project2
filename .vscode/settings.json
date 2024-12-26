@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "graphbellmanfordalg.h": "c"
+        "graphbellmanfordalg.h": "c",
+        "graphallpairsshortestdistances.h": "c"
     }
 }
