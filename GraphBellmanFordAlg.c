@@ -33,40 +33,20 @@ struct _GraphBellmanFordAlg {
   unsigned int startVertex;  // The root of the shortest-paths tree
 };
 
-GraphBellmanFordAlg* GraphBellmanFordAlgExecute(Graph* g,
-                                                unsigned int startVertex) {
+GraphBellmanFordAlg* GraphBellmanFordAlgExecute(Graph* g, unsigned int startVertex) {
   assert(g != NULL);
   assert(startVertex < GraphGetNumVertices(g));
   assert(GraphIsWeighted(g) == 0);
 
-  GraphBellmanFordAlg* result =
-      (GraphBellmanFordAlg*)malloc(sizeof(struct _GraphBellmanFordAlg));
+  GraphBellmanFordAlg* result = (GraphBellmanFordAlg*)malloc(sizeof(struct _GraphBellmanFordAlg));
   assert(result != NULL);
 
-  // Given graph and start vertex for the shortest-paths
+  // Inicialização
   result->graph = g;
   result->startVertex = startVertex;
 
   unsigned int numVertices = GraphGetNumVertices(g);
 
-  //
-  // TO BE COMPLETED !!
-  //
-  // CREATE AND INITIALIZE
-  // result->marked
-  // result->distance
-  // result->predecessor
-  //
-
-  // Mark all vertices as not yet visited, i.e., ZERO
-  
-  // No vertex has (yet) a (valid) predecessor
-  
-  // No vertex has (yet) a (valid) distance to the start vertex
-  
-  // THE ALGORTIHM TO BUILD THE SHORTEST-PATHS TREE
-
-  // Inicialização
   result->marked = (unsigned int*)calloc(numVertices, sizeof(unsigned int));
   result->distance = (int*)malloc(numVertices * sizeof(int));
   result->predecessor = (int*)malloc(numVertices * sizeof(int));
@@ -78,26 +58,33 @@ GraphBellmanFordAlg* GraphBellmanFordAlgExecute(Graph* g,
 
   // Algoritmo de Bellman-Ford para grafos não ponderados
   for (unsigned int pass = 0; pass < numVertices - 1; pass++) {
+    int updated = 0;  // Flag para verificar se houve atualização
     for (unsigned int u = 0; u < numVertices; u++) {
       if (result->distance[u] != -1) {  // Se o vértice foi alcançado
         unsigned int* neighbors = GraphGetAdjacentsTo(g, u);
         unsigned int numNeighbors = neighbors[0];
         for (unsigned int i = 1; i <= numNeighbors; i++) {
           unsigned int v = neighbors[i];
-          if (result->distance[v] == -1 ||
-              result->distance[v] > result->distance[u] + 1) {
+          if (result->distance[v] == -1 || result->distance[v] > result->distance[u] + 1) {
             result->distance[v] = result->distance[u] + 1;
             result->predecessor[v] = u;
             result->marked[v] = 1;
+            updated = 1;  // Se houver atualização, marca
           }
         }
         free(neighbors);
       }
     }
+
+    // Se não houve atualização no pass, podemos interromper o algoritmo
+    if (!updated) {
+      break;
+    }
   }
 
   return result;
 }
+
 
 void GraphBellmanFordAlgDestroy(GraphBellmanFordAlg** p) {
   assert(*p != NULL);

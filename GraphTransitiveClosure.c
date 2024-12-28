@@ -47,8 +47,7 @@ Graph* GraphComputeTransitiveClosure(Graph* g) {
       if (GraphBellmanFordAlgReached(bellman, v)) {
         // Podemos inserir (s -> v). 
         // Se quisermos evitar laços (s -> s), podemos verificar (s != v), mas em 
-        // muitos contextos de fecho transitivo o laço (s -> s) também costuma ser inserido 
-        // (já que s é triv. alcançável de s). Depende da convenção desejada.
+        // muitos contextos de fecho transitivo o laço (s -> s) também costuma ser inserido
         GraphAddEdge(tcGraph, s, v);
       }
     }
