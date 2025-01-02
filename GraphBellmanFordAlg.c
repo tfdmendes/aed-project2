@@ -39,6 +39,8 @@ GraphBellmanFordAlg* GraphBellmanFordAlgExecute(Graph* g, unsigned int startVert
   assert(startVertex < GraphGetNumVertices(g));
   assert(GraphIsWeighted(g) == 0);
 
+  InstrReset();
+
   InstrCount[0]++;
 
   GraphBellmanFordAlg* result = (GraphBellmanFordAlg*)malloc(sizeof(struct _GraphBellmanFordAlg));
@@ -85,10 +87,8 @@ GraphBellmanFordAlg* GraphBellmanFordAlgExecute(Graph* g, unsigned int startVert
     }
   }
   
-  printf("Número: %lu\n", InstrCount[0]);
-
+  printf("Operations: %lu\n", InstrCount[0]);
   InstrPrint();
-  InstrReset();
   return result;
 }
 
