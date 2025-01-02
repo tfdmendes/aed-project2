@@ -38,7 +38,7 @@ Graph* GraphComputeTransitiveClosure(Graph* g) {
   Graph* tcGraph = GraphCreate(numVertices, /*isDigraph=*/1, /*isWeighted=*/0);
 
   for (unsigned int s = 0; s < numVertices; s++) {
-    // Usar Bellman-Ford para descobrir que vértices são alcançáveis a partir de s
+    // Bellman-Ford para descobrir que vértices são alcançáveis a partir de s
     GraphBellmanFordAlg* bellman = GraphBellmanFordAlgExecute(g, s);
 
     // se v alcançável a partir de s, add aresta (s -> v)

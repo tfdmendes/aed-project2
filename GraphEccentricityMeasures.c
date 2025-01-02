@@ -64,10 +64,8 @@ GraphEccentricityMeasures* GraphEccentricityMeasuresCompute(Graph* g) {
     result->eccentricity[i] = -1;  
   }
 
-  // Distâncias entre todos os pares de vértices
   GraphAllPairsShortestDistances* allPairs = GraphAllPairsShortestDistancesExecute(g);
 
-  // Excentricidade para cada vértice
   for (unsigned int i = 0; i < numVertices; i++) {
     int maxDist = -1;  // Começar com um valor indefinido (maxDist)
 
