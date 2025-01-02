@@ -169,7 +169,7 @@ unsigned int* GraphGetCentralVertices(const GraphEccentricityMeasures* p) {
   }
 
   // Copiar os vértices centrais para o novo array
-  for (int i = 0; i <= p->centralVertices[0]; i++) {
+  for (unsigned int i = 0; i <= p->centralVertices[0]; i++) {
     centralVerticesCopy[i] = p->centralVertices[i];
   }
 
@@ -191,7 +191,7 @@ void GraphEccentricityMeasuresPrint(const GraphEccentricityMeasures* p) {
   }
 
   printf("Central Vertices: ");
-  for (int i = 1; i <= p->centralVertices[0]; i++) {
+  for (unsigned int i = 1; i <= p->centralVertices[0]; i++) {
     printf("%d ", p->centralVertices[i]);
   }
   printf("\n");
