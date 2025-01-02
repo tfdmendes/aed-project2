@@ -39,7 +39,7 @@ GraphBellmanFordAlg* GraphBellmanFordAlgExecute(Graph* g, unsigned int startVert
   assert(startVertex < GraphGetNumVertices(g));
   assert(GraphIsWeighted(g) == 0);
 
-  InstrReset();
+  // InstrReset();
 
   InstrCount[0]++;
 
@@ -87,8 +87,8 @@ GraphBellmanFordAlg* GraphBellmanFordAlgExecute(Graph* g, unsigned int startVert
     }
   }
   
-  printf("Operations: %lu\n", InstrCount[0]);
-  InstrPrint();
+  // printf("Operations: %lu\n", InstrCount[0]);
+  // InstrPrint();
   return result;
 }
 

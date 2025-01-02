@@ -48,7 +48,8 @@ Graph* GraphComputeTransitiveClosure(Graph* g) {
       }
     }
     GraphBellmanFordAlgDestroy(&bellman);
-  }
+  } 
+
 
   return tcGraph;
 }

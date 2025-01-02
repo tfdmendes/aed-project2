@@ -80,7 +80,7 @@ char* InstrName[NUMCOUNTERS] = {NULL};  ///extern
 double InstrTime;  ///extern
 
 /// Calibrated Time Unit (in seconds, initially 1s)
-double InstrCTU = 1.394;  ///extern
+double InstrCTU = 1.0;  ///extern
 
 /// Find the Calibrated Time Unit (CTU).
 /// Run and time a loop of basic memory and arithmetic operations to set

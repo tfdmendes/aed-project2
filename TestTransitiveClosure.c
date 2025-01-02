@@ -10,8 +10,38 @@
 
 #include "Graph.h"
 #include "GraphTransitiveClosure.h"
+#include "instrumentation.h"
+
+
+// BEST CASE: grafo acíclico com N vértices
+// 0->1->2->...->(N-1)
+static Graph* CreateDAGLine(unsigned int N) {
+  Graph* dag = GraphCreate(N, 1, 0);
+  for (unsigned int i = 0; i < N - 1; i++) {
+    GraphAddEdge(dag, i, i + 1);
+  }
+  return dag;
+}
+
+// WORST CASE: Grafo dirigido completo com N vértices
+// (i->j para todo i!=j)
+static Graph* CreateCompleteDigraph(unsigned int N) {
+  Graph* complete = GraphCreate(N, 1, 0);
+  for (unsigned int i = 0; i < N; i++) {
+    for (unsigned int j = 0; j < N; j++) {
+      if (i != j) {
+        GraphAddEdge(complete, i, j);
+      }
+    }
+  }
+  return complete;
+}
+
+
+
 
 int main(void) {
+  /*
   // What kind of graph is dig01?
   Graph* dig01 = GraphCreate(6, 1, 0);
   GraphAddEdge(dig01, 1, 2);
@@ -55,6 +85,35 @@ int main(void) {
 
   GraphDestroy(&tcdig01);
   GraphDestroy(&tcdig03);
+  */
+  unsigned int testSizes[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048};
+  unsigned int numTests = 12;
+  for (unsigned int i = 0; i < numTests; i++) {
+      unsigned int N = testSizes[i];
+
+      printf("\n======================================\n");
+      printf("TESTE PARA N = %u\n", N);
+      printf("======================================\n");
+
+      // BEST CASE
+      printf("--- BEST CASE: DAG em linha ---\n");
+      Graph* dag = CreateDAGLine(N);
+      InstrReset();
+      Graph* dagTC = GraphComputeTransitiveClosure(dag);
+      GraphDestroy(&dag);
+      GraphDestroy(&dagTC);
+      InstrPrint();
+
+      // WORST CASE
+      printf("--- WORST CASE: Grafo completo ---\n");
+      Graph* complete = CreateCompleteDigraph(N);
+      InstrReset();
+      Graph* compTC = GraphComputeTransitiveClosure(complete);
+      GraphDestroy(&complete);
+      GraphDestroy(&compTC);
+      InstrPrint();
+  }
+
 
   return 0;
 }
