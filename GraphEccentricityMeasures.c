@@ -38,42 +38,36 @@ struct _GraphEccentricityMeasures {
 // Compute the vertex eccentricity values
 // Compute graph radius and graph diameter
 // Compute the set of central vertices
+// COMPLETE THE CODE
+// CREATE AUXILIARY (static) FUNCTIONS, IF USEFUL
+// Graph radius --- the smallest vertex eccentricity value
+// Graph diameter --- the largest vertex eccentricity value
+// Do not forget that -1 represents an IDEFINITE value
+
+// Computing the set of central vertices
+// Allocate the central vertices array : number of central vertices + 1
+// Fill in the central vertices array
+
 GraphEccentricityMeasures* GraphEccentricityMeasuresCompute(Graph* g) {
   assert(g != NULL);
-
-  // COMPLETE THE CODE
-  // CREATE AUXILIARY (static) FUNCTIONS, IF USEFUL
-  // Graph radius --- the smallest vertex eccentricity value
-  // Graph diameter --- the largest vertex eccentricity value
-  // Do not forget that -1 represents an IDEFINITE value
-
-  // Computing the set of central vertices
-  // Allocate the central vertices array : number of central vertices + 1
-  // Fill in the central vertices array
-
-  // Alocar a estrutura de dados para armazenar as medidas de excentricidade
-  // Criar a estrutura de medidas de excentricidade
   GraphEccentricityMeasures* result = (GraphEccentricityMeasures*)malloc(sizeof(GraphEccentricityMeasures));
   assert(result != NULL);
-
   result->graph = g;
-
-  // Número de vértices no grafo
   unsigned int numVertices = GraphGetNumVertices(g);
 
-  // Alocar e inicializar a array de excentricidades
+  // Array de excentricidades
   result->eccentricity = (int*)malloc(numVertices * sizeof(int));
   assert(result->eccentricity != NULL);
 
   // Inicializar as excentricidades com valores indefinidos (-1)
   for (unsigned int i = 0; i < numVertices; i++) {
-    result->eccentricity[i] = -1;  // Inicializa com -1, indicando indefinido
+    result->eccentricity[i] = -1;  
   }
 
-  // Obter as distâncias entre todos os pares de vértices
+  // Distâncias entre todos os pares de vértices
   GraphAllPairsShortestDistances* allPairs = GraphAllPairsShortestDistancesExecute(g);
 
-  // Calcular a excentricidade para cada vértice
+  // Excentricidade para cada vértice
   for (unsigned int i = 0; i < numVertices; i++) {
     int maxDist = -1;  // Começar com um valor indefinido (maxDist)
 
@@ -121,9 +115,7 @@ GraphEccentricityMeasures* GraphEccentricityMeasuresCompute(Graph* g) {
     }
   }
 
-  // Liberar a memória da matriz de distâncias
   GraphAllPairsShortestDistancesDestroy(&allPairs);
-
   return result;
 }
 

@@ -51,16 +51,16 @@ GraphBellmanFordAlg* GraphBellmanFordAlgExecute(Graph* g, unsigned int startVert
   result->distance = (int*)malloc(numVertices * sizeof(int));
   result->predecessor = (int*)malloc(numVertices * sizeof(int));
   for (unsigned int i = 0; i < numVertices; i++) {
-    result->distance[i] = -1;  // Inicialmente, nenhuma distância é conhecida
-    result->predecessor[i] = -1;  // Nenhum predecessor definido
+    result->distance[i] = -1;  // nenhuma distância é conhecida
+    result->predecessor[i] = -1;  // nenhum predecessor definido
   }
-  result->distance[startVertex] = 0;  // Distância ao próprio vértice é zero
+  result->distance[startVertex] = 0;  // distância ao próprio vértice é zero
 
-  // Algoritmo de Bellman-Ford para grafos não ponderados
+  // bellman-ford para grafos não ponderados
   for (unsigned int pass = 0; pass < numVertices - 1; pass++) {
-    int updated = 0;  // Flag para verificar se houve atualização
+    int updated = 0;  
     for (unsigned int u = 0; u < numVertices; u++) {
-      if (result->distance[u] != -1) {  // Se o vértice foi alcançado
+      if (result->distance[u] != -1) {  // se o vértice foi alcançado
         unsigned int* neighbors = GraphGetAdjacentsTo(g, u);
         unsigned int numNeighbors = neighbors[0];
         for (unsigned int i = 1; i <= numNeighbors; i++) {
@@ -69,14 +69,14 @@ GraphBellmanFordAlg* GraphBellmanFordAlgExecute(Graph* g, unsigned int startVert
             result->distance[v] = result->distance[u] + 1;
             result->predecessor[v] = u;
             result->marked[v] = 1;
-            updated = 1;  // Se houver atualização, marca
+            updated = 1;  // se houver atualização, marca
           }
         }
         free(neighbors);
       }
     }
 
-    // Se não houve atualização no pass, podemos interromper o algoritmo
+    // se não houve atualização no pass, interromper o algoritmo
     if (!updated) {
       break;
     }
