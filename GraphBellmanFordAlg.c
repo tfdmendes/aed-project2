@@ -34,9 +34,12 @@ struct _GraphBellmanFordAlg {
 };
 
 GraphBellmanFordAlg* GraphBellmanFordAlgExecute(Graph* g, unsigned int startVertex) {
+  
   assert(g != NULL);
   assert(startVertex < GraphGetNumVertices(g));
   assert(GraphIsWeighted(g) == 0);
+
+  InstrCount[0]++;
 
   GraphBellmanFordAlg* result = (GraphBellmanFordAlg*)malloc(sizeof(struct _GraphBellmanFordAlg));
   assert(result != NULL);
@@ -51,19 +54,21 @@ GraphBellmanFordAlg* GraphBellmanFordAlgExecute(Graph* g, unsigned int startVert
   result->distance = (int*)malloc(numVertices * sizeof(int));
   result->predecessor = (int*)malloc(numVertices * sizeof(int));
   for (unsigned int i = 0; i < numVertices; i++) {
-    result->distance[i] = -1;  // nenhuma distância é conhecida
-    result->predecessor[i] = -1;  // nenhum predecessor definido
+    result->distance[i] = -1;      // nenhuma distância é conhecida
+    result->predecessor[i] = -1;   // nenhum predecessor definido
   }
   result->distance[startVertex] = 0;  // distância ao próprio vértice é zero
 
   // bellman-ford para grafos não ponderados
   for (unsigned int pass = 0; pass < numVertices - 1; pass++) {
+    InstrCount[0]++;
     int updated = 0;  
     for (unsigned int u = 0; u < numVertices; u++) {
       if (result->distance[u] != -1) {  // se o vértice foi alcançado
         unsigned int* neighbors = GraphGetAdjacentsTo(g, u);
         unsigned int numNeighbors = neighbors[0];
         for (unsigned int i = 1; i <= numNeighbors; i++) {
+          InstrCount[0]++;
           unsigned int v = neighbors[i];
           if (result->distance[v] == -1 || result->distance[v] > result->distance[u] + 1) {
             result->distance[v] = result->distance[u] + 1;
@@ -75,15 +80,18 @@ GraphBellmanFordAlg* GraphBellmanFordAlgExecute(Graph* g, unsigned int startVert
         free(neighbors);
       }
     }
-
-    // se não houve atualização no pass, interromper o algoritmo
     if (!updated) {
       break;
     }
   }
+  
+  printf("Número: %lu\n", InstrCount[0]);
 
+  InstrPrint();
+  InstrReset();
   return result;
 }
+
 
 
 void GraphBellmanFordAlgDestroy(GraphBellmanFordAlg** p) {
